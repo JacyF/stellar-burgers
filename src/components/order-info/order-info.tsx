@@ -1,30 +1,26 @@
-import { FC, useMemo } from 'react';
+import { FC, useEffect, useMemo } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
-import { useParams, redirect } from 'react-router-dom';
-import { useAppSelector } from '../../services/store';
+import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from '../../services/store';
 import {
-  selectOrders,
-  selectIngredients
-} from '../../slices/stellarBurgerSlice';
+  getIngredientsSelector,
+  getOrderByNumber,
+  getOrderSelector
+} from '@slices';
 
 export const OrderInfo: FC = () => {
-  const params = useParams<{ number: string }>();
-  if (!params.number) {
-    redirect('/feed');
-    return null;
-  }
+  const { number } = useParams();
+  const dispatch = useDispatch();
 
-  const orders = useAppSelector(selectOrders);
+  const orderData = useSelector(getOrderSelector);
+  const ingredients: TIngredient[] = useSelector(getIngredientsSelector);
 
-  const orderData = orders.find(
-    (item) => item.number === parseInt(params.number!)
-  );
+  useEffect(() => {
+    dispatch(getOrderByNumber(Number(number)));
+  }, [dispatch]);
 
-  const ingredients: TIngredient[] = useAppSelector(selectIngredients);
-
-  /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {
     if (!orderData || !ingredients.length) return null;
 

@@ -1,54 +1,42 @@
-import { FC, SyntheticEvent, useEffect } from 'react';
+import { FC, SyntheticEvent, useEffect, useState } from 'react';
 import { RegisterUI } from '@ui-pages';
+import { useDispatch, useSelector } from '../../services/store';
 import {
-  fetchRegisterUser,
-  getUserThunk,
-  removeErrorText,
-  selectErrorText,
-  selectLoading
-} from '../../slices/stellarBurgerSlice';
+  isErrorSelector,
+  isLoadingSelector,
+  registerUser,
+  resetErrorMessage
+} from '@slices';
 import { Preloader } from '@ui';
-import { useAppSelector, useAppDispatch } from '../../services/store';
-import { useForm } from '../../hooks/useForm';
 
 export const Register: FC = () => {
-  const dispatch = useAppDispatch();
-  const { values, handleChange } = useForm({
-    userName: '',
-    email: '',
-    password: ''
-  });
-  const isLoading = useAppSelector(selectLoading);
-  const error = useAppSelector(selectErrorText);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
+  const isError = useSelector(isErrorSelector);
+  const isLoading = useSelector(isLoadingSelector);
 
   useEffect(() => {
-    dispatch(removeErrorText());
-  }, []);
+    dispatch(resetErrorMessage());
+  }, [dispatch]);
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    dispatch(
-      fetchRegisterUser({
-        name: values.userName,
-        password: values.password,
-        email: values.email
-      })
-    ).then(() => dispatch(getUserThunk()));
+    dispatch(registerUser({ name, email, password }));
   };
 
-  if (isLoading) {
-    return <Preloader />;
-  }
+  if (isLoading) return <Preloader />;
 
   return (
     <RegisterUI
-      errorText={error}
-      email={values.email}
-      userName={values.userName}
-      password={values.password}
-      setEmail={handleChange}
-      setPassword={handleChange}
-      setUserName={handleChange}
+      errorText={isError ? 'Пользователь с таким адресом уже существует' : ''}
+      email={email}
+      userName={name}
+      password={password}
+      setEmail={setEmail}
+      setPassword={setPassword}
+      setUserName={setName}
       handleSubmit={handleSubmit}
     />
   );

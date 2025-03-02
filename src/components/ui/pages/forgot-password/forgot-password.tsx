@@ -23,7 +23,7 @@ export const ForgotPasswordUI: FC<PageUIProps> = ({
           <Input
             type='email'
             placeholder='Укажите e-mail'
-            onChange={setEmail}
+            onChange={(e) => setEmail(e.target.value)}
             value={email}
             name='email'
             error={false}
@@ -32,7 +32,12 @@ export const ForgotPasswordUI: FC<PageUIProps> = ({
           />
         </div>
         <div className={`pb-6 ${styles.button}`}>
-          <Button type='primary' size='medium' htmlType='submit'>
+          <Button
+            type='primary'
+            size='medium'
+            htmlType='submit'
+            disabled={email ? false : true}
+          >
             Восстановить
           </Button>
         </div>

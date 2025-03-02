@@ -1,33 +1,45 @@
-import { FC, useState, SyntheticEvent } from 'react';
+import { FC, useState, SyntheticEvent, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useForm } from '../../hooks/useForm';
 
-import { forgotPasswordApi } from '@api';
 import { ForgotPasswordUI } from '@ui-pages';
+import { useDispatch, useSelector } from '../../services/store';
+import {
+  forgotPassword,
+  isErrorSelector,
+  isLoadingSelector,
+  resetErrorMessage
+} from '@slices';
+import { Preloader } from '@ui';
 
 export const ForgotPassword: FC = () => {
-  const { values, handleChange } = useForm({ email: '' });
-  const [error, setError] = useState<Error | null>(null);
+  const [email, setEmail] = useState('');
+  const isError = useSelector(isErrorSelector);
+  const isLoading = useSelector(isLoadingSelector);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(resetErrorMessage());
+  }, [dispatch]);
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-
-    setError(null);
-    forgotPasswordApi(values)
-      .then(() => {
+    dispatch(forgotPassword({ email })).then((data) => {
+      if (data.payload) {
         localStorage.setItem('resetPassword', 'true');
         navigate('/reset-password', { replace: true });
-      })
-      .catch((err) => setError(err));
+      }
+    });
   };
+
+  if (isLoading) return <Preloader />;
 
   return (
     <ForgotPasswordUI
-      errorText={error?.message}
-      email={values.email}
-      setEmail={handleChange}
+      errorText={isError ? 'Электронный адрес не существует или не найден' : ''}
+      email={email}
+      setEmail={setEmail}
       handleSubmit={handleSubmit}
     />
   );

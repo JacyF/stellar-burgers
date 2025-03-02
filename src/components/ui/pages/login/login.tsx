@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import {
   Input,
   Button,
@@ -29,7 +29,7 @@ export const LoginUI: FC<LoginUIProps> = ({
             <Input
               type='email'
               placeholder='E-mail'
-              onChange={setEmail}
+              onChange={(e) => setEmail(e.target.value)}
               value={email}
               name='email'
               error={false}
@@ -39,13 +39,18 @@ export const LoginUI: FC<LoginUIProps> = ({
           </div>
           <div className='pb-6'>
             <PasswordInput
-              onChange={setPassword}
+              onChange={(e) => setPassword(e.target.value)}
               value={password}
               name='password'
             />
           </div>
           <div className={`pb-6 ${styles.button}`}>
-            <Button type='primary' size='medium' htmlType='submit'>
+            <Button
+              type='primary'
+              size='medium'
+              htmlType='submit'
+              disabled={email && password ? false : true}
+            >
               Войти
             </Button>
           </div>

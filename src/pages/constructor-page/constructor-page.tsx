@@ -1,5 +1,4 @@
-import { selectLoading } from '../../slices/stellarBurgerSlice';
-import { useAppSelector } from '../../services/store';
+import { useSelector } from '../../services/store';
 
 import styles from './constructor-page.module.css';
 
@@ -7,9 +6,10 @@ import { BurgerIngredients } from '../../components';
 import { BurgerConstructor } from '../../components';
 import { Preloader } from '../../components/ui';
 import { FC } from 'react';
+import { getLoadingSelector } from '@slices';
 
 export const ConstructorPage: FC = () => {
-  const isIngredientsLoading = useAppSelector(selectLoading);
+  const isIngredientsLoading = useSelector(getLoadingSelector);
 
   return (
     <>

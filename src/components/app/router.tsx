@@ -14,11 +14,27 @@ import { ProtectedRoute } from '../protected-route';
 import { OrderInfo } from '../order-info';
 import { Modal } from '../modal';
 import { IngredientDetails } from '../ingredient-details';
+import { useEffect, useState } from 'react';
 
 export const Router = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const background = location.state?.background;
+  const [hasNavigated, setHasNavigated] = useState(false);
+
+  // Восстановление состояния после обновления страницы
+  useEffect(() => {
+    if (!hasNavigated) {
+      const path = window.location.pathname;
+
+      // Если URL указывает на детали заказа в ленте, открываем модальное окно
+      if (path.startsWith('/feed/')) {
+        const orderNumber = path.split('/').pop(); // Получаем номер заказа из URL
+        navigate(`/feed/${orderNumber}`, { state: { background: location } });
+        setHasNavigated(true); // Устанавливаем флаг после первого вызова
+      }
+    }
+  }, [navigate, location, hasNavigated]);
 
   return (
     <>
@@ -26,11 +42,7 @@ export const Router = () => {
         <Route path='*' element={<NotFound404 />} />
         <Route path='/' element={<ConstructorPage />} />
 
-        <Route path='/feed'>
-          <Route index element={<Feed />} />
-          <Route path=':number' element={<OrderInfo />} />
-        </Route>
-
+        {/* Маршруты, доступные только для неавторизованных пользователей */}
         <Route element={<ProtectedRoute onlyUnAuth />}>
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />
@@ -38,6 +50,7 @@ export const Router = () => {
           <Route path='/reset-password' element={<ResetPassword />} />
         </Route>
 
+        {/* Маршруты, доступные только для авторизованных пользователей */}
         <Route element={<ProtectedRoute />}>
           <Route path='/profile'>
             <Route index element={<Profile />} />
@@ -46,17 +59,25 @@ export const Router = () => {
               <Route path=':number' element={<OrderInfo />} />
             </Route>
           </Route>
+
+          {/* Лента заказов (доступна всем, но детали заказов только для авторизованных) */}
+          <Route path='/feed'>
+            <Route index element={<Feed />} />
+            <Route path=':number' element={<OrderInfo />} />
+          </Route>
         </Route>
 
+        {/* Маршруты, доступные всем пользователям */}
         <Route path='/ingredients/:id' element={<IngredientDetails />} />
       </Routes>
 
+      {/* Модальные окна */}
       {background && (
         <Routes>
           <Route
             path='/feed/:number'
             element={
-              <Modal title='Детали заказа' onClose={() => navigate(-1)}>
+              <Modal title='Детали заказа' onClose={() => navigate('/feed')}>
                 <OrderInfo />
               </Modal>
             }

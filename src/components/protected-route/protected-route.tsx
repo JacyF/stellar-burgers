@@ -3,10 +3,14 @@ import { useSelector } from '../../services/store';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
 type ProtectedRouteProps = {
+  children?: React.ReactElement;
   onlyUnAuth?: boolean;
 };
 
-export const ProtectedRoute = ({ onlyUnAuth }: ProtectedRouteProps) => {
+export const ProtectedRoute = ({
+  children,
+  onlyUnAuth
+}: ProtectedRouteProps) => {
   const isAuthChecked = useSelector(authCheckedSelector);
   const location = useLocation();
 
@@ -18,5 +22,5 @@ export const ProtectedRoute = ({ onlyUnAuth }: ProtectedRouteProps) => {
     return <Navigate replace to={from} />;
   }
 
-  return <Outlet />;
+  return children ? <>{children}</> : <Outlet />;
 };

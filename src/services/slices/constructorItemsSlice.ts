@@ -8,15 +8,13 @@ export type TConstructorItems = {
   ingredients: Array<TConstructorIngredient> | [];
 };
 
-type TBurgersState = {
-  ingredients: Array<TIngredient>;
+export type TConstructorItemsState = {
   loading: boolean;
   error: string | null | undefined;
   constructorItems: TConstructorItems;
 };
 
-const initialState: TBurgersState = {
-  ingredients: [],
+export const initialState: TConstructorItemsState = {
   loading: true,
   error: null,
   constructorItems: {
@@ -25,13 +23,8 @@ const initialState: TBurgersState = {
   }
 };
 
-export const getBurgerIngredients = createAsyncThunk(
-  'burgers/getAllIngredients',
-  async () => getIngredientsApi()
-);
-
-const burgersSlice = createSlice({
-  name: 'burgers',
+const constructorItemsSlice = createSlice({
+  name: 'constructorItems',
   initialState,
   reducers: {
     addConstructorItem: {
@@ -87,36 +80,15 @@ const burgersSlice = createSlice({
     }
   },
   selectors: {
-    getBurgersState: (state) => state,
-    getIngredientsSelector: (state) => state.ingredients,
     getLoadingSelector: (state) => state.loading,
     getConstructorItemsSelector: (state) => state.constructorItems
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(getBurgerIngredients.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(getBurgerIngredients.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message;
-      })
-      .addCase(getBurgerIngredients.fulfilled, (state, action) => {
-        state.loading = false;
-        state.ingredients = action.payload;
-      });
   }
 });
 
-export const burgersReducer = burgersSlice.reducer;
+export const constructorItemsReducer = constructorItemsSlice.reducer;
 
-export const {
-  getBurgersState,
-  getIngredientsSelector,
-  getLoadingSelector,
-  getConstructorItemsSelector
-} = burgersSlice.selectors;
+export const { getLoadingSelector, getConstructorItemsSelector } =
+  constructorItemsSlice.selectors;
 
 export const {
   addConstructorItem,
@@ -124,4 +96,4 @@ export const {
   moveUpConstructorItem,
   moveDownConstructorItem,
   resetConstructorItems
-} = burgersSlice.actions;
+} = constructorItemsSlice.actions;

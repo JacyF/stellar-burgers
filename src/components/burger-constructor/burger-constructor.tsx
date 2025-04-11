@@ -6,6 +6,7 @@ import {
   getConstructorItemsSelector,
   getOrderRequestSelector,
   getOrderResponseSelector,
+  getUserDataSelector,
   orderBurger,
   resetConstructorItems,
   resetOrderResponse
@@ -16,13 +17,13 @@ export const BurgerConstructor: FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const isAuthChecked = useSelector(authCheckedSelector);
+  const user = useSelector(getUserDataSelector);
   const constructorItems = useSelector(getConstructorItemsSelector);
   const orderRequest = useSelector(getOrderRequestSelector);
   const orderModalData = useSelector(getOrderResponseSelector);
 
   const onOrderClick = () => {
-    if (!isAuthChecked) {
+    if (!user) {
       navigate('/login');
       return;
     }

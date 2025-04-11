@@ -1,7 +1,7 @@
 import { orderBurgerApi } from '@api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TOrder } from '@utils-types';
-import { TConstructorItems } from './burgersSlice';
+import { TConstructorItems } from './constructorItemsSlice';
 
 type TOrdersState = {
   error: string | null | undefined;

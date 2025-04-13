@@ -71,6 +71,9 @@ describe('Тестирование главной страницы', () => {
     it('отправка заказа', () => {
       cy.get(`[data-cy=${'643d69a5c3f7b9001cfa093c'}]`).find('button').click();
       cy.get(`[data-cy=${'643d69a5c3f7b9001cfa093e'}]`).find('button').click();
+      cy.get(`[data-cy=${'643d69a5c3f7b9001cfa0942'}]`).find('button').click();
+
+      cy.get('[data-cy="orderButton"]').should('be.enabled').click();
 
       cy.intercept('POST', 'api/orders', { fixture: 'order.json' }).as(
         'getOrder'

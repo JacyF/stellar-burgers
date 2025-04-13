@@ -1,7 +1,7 @@
 import {
-  TConstructorItemsState,
   addConstructorItem,
   constructorItemsReducer,
+  initialState,
   moveUpConstructorItem,
   removeConstructorItem
 } from '@slices';
@@ -85,15 +85,14 @@ describe('Тестирование редьюсера слайса constructorIt
     id: 'ab0904a0-e1f3-4876-b800-71eb13afd4cb'
   };
 
-  const initialState: TConstructorItemsState = {
-    loading: true,
-    error: null,
+  const testInitialState = {
+    ...initialState,
     constructorItems: testConstructorItems
   };
 
   it('добавить ингредиент', () => {
     const newState = constructorItemsReducer(
-      initialState,
+      testInitialState,
       addConstructorItem(newIngredient)
     );
 
@@ -108,7 +107,7 @@ describe('Тестирование редьюсера слайса constructorIt
 
   it('удалить ингредиент', () => {
     const newState = constructorItemsReducer(
-      initialState,
+      testInitialState,
       removeConstructorItem(2)
     );
     expect(newState.constructorItems.ingredients).toEqual(
@@ -120,7 +119,7 @@ describe('Тестирование редьюсера слайса constructorIt
     it('переместить элемент вверх', () => {
       const movedItem = testConstructorItems.ingredients.slice(-1)[0];
       const newState = constructorItemsReducer(
-        initialState,
+        testInitialState,
         moveUpConstructorItem(movedItem)
       );
       const expectedState = [...testConstructorItems.ingredients];
@@ -132,7 +131,7 @@ describe('Тестирование редьюсера слайса constructorIt
     it('переместить элемент вниз', () => {
       const movedItem = testConstructorItems.ingredients.slice(-3)[0];
       const newState = constructorItemsReducer(
-        initialState,
+        testInitialState,
         moveUpConstructorItem(movedItem)
       );
       const expectedState = [...testConstructorItems.ingredients];

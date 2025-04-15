@@ -29,6 +29,7 @@ export const ResetPasswordUI: FC<ResetPasswordUIProps> = ({
             onChange={(e) => setPassword(e.target.value)}
             value={password}
             name='password'
+            placeholder='Новый пароль'
           />
         </div>
         <div className='pb-6'>
@@ -44,7 +45,12 @@ export const ResetPasswordUI: FC<ResetPasswordUIProps> = ({
           />
         </div>
         <div className={`pb-6 ${styles.button}`}>
-          <Button type='primary' size='medium' htmlType='submit'>
+          <Button
+            type='primary'
+            size='medium'
+            htmlType='submit'
+            disabled={password && token ? false : true}
+          >
             Сохранить
           </Button>
         </div>

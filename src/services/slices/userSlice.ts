@@ -62,9 +62,11 @@ export const checkUserAuth = createAsyncThunk(
   'user/checkUser',
   (_, { dispatch }) => {
     if (getCookie('accessToken')) {
-      dispatch(getUser()).then((data) => {
-        if (data.payload) dispatch(authChecked());
+      dispatch(getUser()).finally(() => {
+        dispatch(authChecked());
       });
+    } else {
+      dispatch(authChecked());
     }
   }
 );
@@ -108,7 +110,6 @@ const userSlice = createSlice({
     },
     userLogout: (state) => {
       state.userData = null;
-      state.isAuthChecked = false;
     }
   },
   selectors: {

@@ -2,20 +2,17 @@ import { FC, SyntheticEvent, useEffect, useState } from 'react';
 import { LoginUI } from '@ui-pages';
 import { useDispatch, useSelector } from '../../services/store';
 import {
-  authCheckedSelector,
   isErrorSelector,
   isLoadingSelector,
   loginUser,
   resetErrorMessage
 } from '@slices';
-import { Navigate } from 'react-router-dom';
 import { Preloader } from '@ui';
 
 export const Login: FC = () => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const isAuthenticated = useSelector(authCheckedSelector);
   const isError = useSelector(isErrorSelector);
   const isLoading = useSelector(isLoadingSelector);
 
@@ -27,10 +24,6 @@ export const Login: FC = () => {
     e.preventDefault();
     dispatch(loginUser({ email, password }));
   };
-
-  if (isAuthenticated) {
-    return <Navigate to={'/'} />;
-  }
 
   if (isLoading) return <Preloader />;
 

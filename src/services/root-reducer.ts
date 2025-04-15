@@ -1,12 +1,14 @@
 import {
-  burgersReducer,
+  constructorItemsReducer,
   feedsReducer,
+  ingredientsReducer,
   ordersReducer,
   userReducer
 } from '@slices';
 
 export const rootReducer = {
-  burgers: burgersReducer,
+  ingredients: ingredientsReducer,
+  constructorItems: constructorItemsReducer,
   feeds: feedsReducer,
   orders: ordersReducer,
   user: userReducer
